@@ -79,11 +79,14 @@ const world = {
         width: 10,
         hight: 10,
         widthSegments: 10,
-        hightSegments: 10
+        hightSegments: 10,
+        red: 0,
+        green: 0,
+        blue: 0
     }
 }
 
-// 将 plane 优化为 一个函数
+// 将 plane 优化为 一个函数 change the shape
 function generatePlane() {
     planeMesh.geometry.dispose();
     planeMesh.geometry = new THREE.PlaneGeometry(world.plane.width, world.plane.hight, world.plane.widthSegments, world.plane.hightSegments)
@@ -99,11 +102,34 @@ function generatePlane() {
 }
 
 
+
+// change color
+function changeColor() {
+    console.log(planeMesh.geometry.attributes)
+
+    const colors = []
+    for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
+        // console.log(index)
+        colors.push(world.plane.red, world.plane.green, world.plane.blue)
+
+    }
+    //  给 geometry 添加一个新属性  setAttribute(【属性名】，【要创建的属性的种类，数据类型】,【group number】)
+    //  group nunber 意思是，多少个数组元素为 一组， 这里 三个元素为一组， threejs 中 用 0~1 表示颜色 
+    planeMesh.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3))
+
+}
+
+
+
+
 // dat.gui.add(world.plane,'属性',最小值 ,最大值)
 gui.add(world.plane, 'width', 1, 20).onChange(generatePlane)
 gui.add(world.plane, 'hight', 1, 20).onChange(generatePlane)
 gui.add(world.plane, 'widthSegments', 1, 20).onChange(generatePlane)
 gui.add(world.plane, 'hightSegments', 1, 20).onChange(generatePlane)
+gui.add(world.plane, 'red', 0, 1).onChange(changeColor)
+gui.add(world.plane, 'green', 0, 1).onChange(changeColor)
+gui.add(world.plane, 'blue', 0, 1).onChange(changeColor)
 
 // 设置render
 renderer.setSize(innerWidth, innerHeight)
@@ -140,18 +166,14 @@ for (let i = 0; i < array.length; i += 3) {
 
 }
 
-console.log(planeMesh.geometry.attributes)
 
-const colors = []
-for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
-    // console.log(index)
-    colors.push(1, 0, 0)
 
-}
 
-//  给 geometry 添加一个新属性  setAttribute(【属性名】，【要创建的属性的种类，数据类型】,【group number】)
-//  group nunber 意思是，多少个数组元素为 一组， 这里 三个元素为一组， threejs 中 用 0~1 表示颜色 
-planeMesh.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3))
+
+
+
+
+
 
 
 // 设置相机位置(相机默认在中心点)
@@ -185,13 +207,14 @@ const mouse = {
 function animation() {
     renderer.render(scene, camera)
     window.requestAnimationFrame(animation)
-        // planeMesh.rotation.x += 0.01
+    planeMesh.rotation.y += 0.01
         // 用来跟踪 鼠标是否 在物体上
     raycaster.setFromCamera(mouse, camera)
     const intersects = raycaster.intersectObject(planeMesh)
         // console.log(intersects)
     if (intersects.length > 0) {
         console.log('instersecting.........')
+        planeMesh.rotation.y -= 0.01
 
     }
 }
@@ -206,8 +229,6 @@ addEventListener('mousemove', (event) => {
     // console.log(mouse)
     // console.log("move")
 })
-
-
 
 
 
