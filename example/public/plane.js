@@ -68,6 +68,9 @@ console.log(OrbitControls)
 const raycaster = new THREE.Raycaster()
 console.log(raycaster)
 
+// 导入 gsap
+import gsap from '../node_modules/gsap/src/gsap-core.js'
+console.log(gsap)
 
 // / 继承 GUI 
 const gui = new dat.GUI();
@@ -76,13 +79,10 @@ const gui = new dat.GUI();
 // 创建一个 world 对象，该对象的第一个元素是 plane , 属性 width 初始值为 10
 const world = {
     plane: {
-        width: 10,
-        hight: 10,
-        widthSegments: 10,
-        hightSegments: 10,
-        red: 0,
-        green: 0,
-        blue: 0
+        width: 47,
+        hight: 44,
+        widthSegments: 44,
+        hightSegments: 39,
     }
 }
 
@@ -96,40 +96,55 @@ function generatePlane() {
         const y = array[i + 1]
         const z = array[i + 2]
             // array[i] = x + 3
+        array[i] = x + (Math.random() - 0.5)
+        array[i + 1] = y + (Math.random() - 0.5)
         array[i + 2] = z + Math.random()
 
     }
-}
 
-
-
-// change color
-function changeColor() {
+    // change color
+    // function changeColor() {
     console.log(planeMesh.geometry.attributes)
 
     const colors = []
     for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
         // console.log(index)
-        colors.push(world.plane.red, world.plane.green, world.plane.blue)
+        colors.push(0, 0.19, 0.4)
+            // colors.push(world.plane.red, world.plane.green, world.plane.blue)
 
     }
     //  给 geometry 添加一个新属性  setAttribute(【属性名】，【要创建的属性的种类，数据类型】,【group number】)
     //  group nunber 意思是，多少个数组元素为 一组， 这里 三个元素为一组， threejs 中 用 0~1 表示颜色 
     planeMesh.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3))
 
+    // }
+
 }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 // dat.gui.add(world.plane,'属性',最小值 ,最大值)
-gui.add(world.plane, 'width', 1, 20).onChange(generatePlane)
-gui.add(world.plane, 'hight', 1, 20).onChange(generatePlane)
-gui.add(world.plane, 'widthSegments', 1, 20).onChange(generatePlane)
-gui.add(world.plane, 'hightSegments', 1, 20).onChange(generatePlane)
-gui.add(world.plane, 'red', 0, 1).onChange(changeColor)
-gui.add(world.plane, 'green', 0, 1).onChange(changeColor)
-gui.add(world.plane, 'blue', 0, 1).onChange(changeColor)
+gui.add(world.plane, 'width', 1, 100).onChange(generatePlane)
+gui.add(world.plane, 'hight', 1, 100).onChange(generatePlane)
+gui.add(world.plane, 'widthSegments', 1, 100).onChange(generatePlane)
+gui.add(world.plane, 'hightSegments', 1, 100).onChange(generatePlane)
+    // gui.add(world.plane, 'red', 0, 1).onChange(changeColor)
+    // gui.add(world.plane, 'green', 0, 1).onChange(changeColor)
+    // gui.add(world.plane, 'blue', 0, 1).onChange(changeColor)
+
 
 // 设置render
 renderer.setSize(innerWidth, innerHeight)
@@ -137,7 +152,7 @@ renderer.setPixelRatio(devicePixelRatio)
 document.body.appendChild(renderer.domElement)
 
 // 节点
-const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10)
+const planeGeometry = new THREE.PlaneGeometry(world.plane.width, world.plane.hight, world.plane.widthSegments, world.plane.hightSegments)
     //  材料
     // MeshPhongMaterial 这种材料要看到需要有光
 const material = new THREE.MeshPhongMaterial({
@@ -149,6 +164,28 @@ const material = new THREE.MeshPhongMaterial({
 
 // mash
 const planeMesh = new THREE.Mesh(planeGeometry, material)
+
+// ========================== 第一次 加载 plane 給 plane 上色=============================
+planeMesh.geometry.dispose();
+console.log(planeMesh.geometry.attributes)
+
+const colors = []
+for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
+    // console.log(index)
+    colors.push(0, 0.19, 0.4)
+        // colors.push(world.plane.red, world.plane.green, world.plane.blue)
+
+}
+//  给 geometry 添加一个新属性  setAttribute(【属性名】，【要创建的属性的种类，数据类型】,【group number】)
+//  group nunber 意思是，多少个数组元素为 一组， 这里 三个元素为一组， threejs 中 用 0~1 表示颜色 
+planeMesh.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors), 3))
+
+// }
+
+
+
+
+
 
 // 添加到场景
 scene.add(planeMesh)
@@ -165,7 +202,6 @@ for (let i = 0; i < array.length; i += 3) {
     array[i + 2] = z + Math.random()
 
 }
-
 
 
 
@@ -207,14 +243,66 @@ const mouse = {
 function animation() {
     renderer.render(scene, camera)
     window.requestAnimationFrame(animation)
-    planeMesh.rotation.y += 0.01
+        // planeMesh.rotation.y += 0.01
         // 用来跟踪 鼠标是否 在物体上
     raycaster.setFromCamera(mouse, camera)
     const intersects = raycaster.intersectObject(planeMesh)
         // console.log(intersects)
     if (intersects.length > 0) {
-        console.log('instersecting.........')
-        planeMesh.rotation.y -= 0.01
+        // console.log('instersecting.........')
+        // 鼠标悬浮到时 静止
+        // planeMesh.rotation.y -= 0.01
+
+        console.log(intersects[0].object.geometry.attributes.color)
+
+        const { color } = intersects[0].object.geometry.attributes
+            // vertice 1
+        color.setX(intersects[0].face.a, 0.1)
+        color.setY(intersects[0].face.a, 0.5)
+        color.setZ(intersects[0].face.a, 1)
+            // vertice 2
+        color.setX(intersects[0].face.b, 0.1)
+        color.setY(intersects[0].face.b, 0.5)
+        color.setZ(intersects[0].face.b, 1)
+            // vertice 3
+        color.setX(intersects[0].face.c, 0.1)
+        color.setY(intersects[0].face.c, 0.5)
+        color.setZ(intersects[0].face.c, 1)
+
+        color.needsUpdate = true;
+
+        const initialColor = {
+            r: 0,
+            g: 0.19,
+            b: 0.4
+        }
+        const hoverColor = {
+            r: 0.1,
+            g: 0.5,
+            b: 1
+        }
+        gsap.to(hoverColor, {
+            r: initialColor.r,
+            g: initialColor.g,
+            b: initialColor.b,
+            onUpdate: () => {
+                console.log(hoverColor)
+                    // vertice 1
+                color.setX(intersects[0].face.a, hoverColor.r)
+                color.setY(intersects[0].face.a, hoverColor.g)
+                color.setZ(intersects[0].face.a, hoverColor.b)
+                    // vertice 2                
+                color.setX(intersects[0].face.b, hoverColor.r)
+                color.setY(intersects[0].face.b, hoverColor.g)
+                color.setZ(intersects[0].face.b, hoverColor.b)
+                    // vertice 3                
+                color.setX(intersects[0].face.c, hoverColor.r)
+                color.setY(intersects[0].face.c, hoverColor.g)
+                color.setZ(intersects[0].face.c, hoverColor.b)
+
+                color.needsUpdate = true;
+            }
+        })
 
     }
 }
