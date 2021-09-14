@@ -69,11 +69,6 @@ const raycaster = new THREE.Raycaster()
 console.log(raycaster)
 
 
-
-
-
-
-
 // / 继承 GUI 
 const gui = new dat.GUI();
 
@@ -104,39 +99,11 @@ function generatePlane() {
 }
 
 
-
-
-
 // dat.gui.add(world.plane,'属性',最小值 ,最大值)
 gui.add(world.plane, 'width', 1, 20).onChange(generatePlane)
 gui.add(world.plane, 'hight', 1, 20).onChange(generatePlane)
 gui.add(world.plane, 'widthSegments', 1, 20).onChange(generatePlane)
 gui.add(world.plane, 'hightSegments', 1, 20).onChange(generatePlane)
-
-
-
-
-
-
-
-
-// gui.add(world.plane, 'hight', 1, 20).onChange(() => {
-//     //    console.log(planeMesh.geometry) 
-//     // console.log(world.plane.width)
-
-//     planeMesh.geometry.dispose();
-//     planeMesh.geometry = new THREE.PlaneGeometry(world.plane.width, world.plane.hight, 10, 10)
-//     const { array } = planeMesh.geometry.attributes.position;
-//     for (let i = 0; i < array.length; i += 3) {
-//         const x = array[i]
-//         const y = array[i + 1]
-//         const z = array[i + 2]
-//             // array[i] = x + 3
-//         array[i + 2] = z + Math.random()
-
-//     }
-
-// })
 
 // 设置render
 renderer.setSize(innerWidth, innerHeight)
@@ -148,7 +115,7 @@ const planeGeometry = new THREE.PlaneGeometry(5, 5, 10, 10)
     //  材料
     // MeshPhongMaterial 这种材料要看到需要有光
 const material = new THREE.MeshPhongMaterial({
-    color: 0xfffff6,
+
     side: THREE.DoubleSide,
     flatShading: THREE.FlatShading,
     vertexColors: true
@@ -162,6 +129,7 @@ scene.add(planeMesh)
 
 console.log(planeMesh.geometry.attributes.position.array)
     // object destructring
+    //  物体变形
 const { array } = planeMesh.geometry.attributes.position;
 for (let i = 0; i < array.length; i += 3) {
     const x = array[i]
@@ -175,12 +143,11 @@ for (let i = 0; i < array.length; i += 3) {
 console.log(planeMesh.geometry.attributes)
 
 const colors = []
-for (let index = 0; index < planeMesh.geometry.attributes.position.count; index++) {
+for (let i = 0; i < planeMesh.geometry.attributes.position.count; i++) {
     // console.log(index)
-    colors.push(0, 1, 0)
+    colors.push(1, 0, 0)
 
 }
-
 
 //  给 geometry 添加一个新属性  setAttribute(【属性名】，【要创建的属性的种类，数据类型】,【group number】)
 //  group nunber 意思是，多少个数组元素为 一组， 这里 三个元素为一组， threejs 中 用 0~1 表示颜色 
@@ -198,12 +165,12 @@ new OrbitControls(camera, renderer.domElement)
 renderer.render(scene, camera)
 
 // 光 两个参数 【光的颜色】 【光的强度】
-const light = new THREE.DirectionalLight(0x00ffff, 1)
+const light = new THREE.DirectionalLight(0xffffff, 1)
     // 设置光的位置才能看得到
 light.position.set(0, 0, 1);
 scene.add(light)
 
-const backLight = new THREE.DirectionalLight(0x00ffff, 1)
+const backLight = new THREE.DirectionalLight(0xffffff, 1)
     // 设置光的位置才能看得到
 backLight.position.set(0, 0, -1);
 scene.add(backLight)
@@ -231,14 +198,61 @@ function animation() {
 // 调用动画
 animation();
 
-
-
 // 每当移动鼠标事件发生时，event 作为一个 对象返回，进而得到 x, y
 addEventListener('mousemove', (event) => {
     // console.log(event.clientX + "," + event.clientY)
     mouse.x = (event.clientX / innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / innerHeight) * 2 + 1;
     // console.log(mouse)
-
     // console.log("move")
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// gui.add(world.plane, 'hight', 1, 20).onChange(() => {
+//     //    console.log(planeMesh.geometry) 
+//     // console.log(world.plane.width)
+
+//     planeMesh.geometry.dispose();
+//     planeMesh.geometry = new THREE.PlaneGeometry(world.plane.width, world.plane.hight, 10, 10)
+//     const { array } = planeMesh.geometry.attributes.position;
+//     for (let i = 0; i < array.length; i += 3) {
+//         const x = array[i]
+//         const y = array[i + 1]
+//         const z = array[i + 2]
+//             // array[i] = x + 3
+//         array[i + 2] = z + Math.random()
+
+//     }
+
+// })
