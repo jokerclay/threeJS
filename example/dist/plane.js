@@ -79,9 +79,9 @@ const gui = new dat.GUI();
 // 创建一个 world 对象，该对象的第一个元素是 plane , 属性 width 初始值为 10
 const world = {
     plane: {
-        width: 47,
-        hight: 44,
-        widthSegments: 44,
+        width: 20,
+        hight: 32,
+        widthSegments: 30,
         hightSegments: 39,
     }
 }
@@ -213,7 +213,7 @@ for (let i = 0; i < array.length; i += 3) {
 
 
 // 设置相机位置(相机默认在中心点)
-camera.position.z = 5
+camera.position.z = 11
 
 // orbit control
 new OrbitControls(camera, renderer.domElement)
@@ -223,7 +223,7 @@ new OrbitControls(camera, renderer.domElement)
 renderer.render(scene, camera)
 
 // 光 两个参数 【光的颜色】 【光的强度】
-const light = new THREE.DirectionalLight(0xffffff, 1)
+const light = new THREE.DirectionalLight(0xffffff, 2)
     // 设置光的位置才能看得到
 light.position.set(0, 0, 1);
 scene.add(light)
@@ -243,7 +243,7 @@ const mouse = {
 function animation() {
     renderer.render(scene, camera)
     window.requestAnimationFrame(animation)
-        // planeMesh.rotation.y += 0.01
+    planeMesh.rotation.y += 0.01
         // 用来跟踪 鼠标是否 在物体上
     raycaster.setFromCamera(mouse, camera)
     const intersects = raycaster.intersectObject(planeMesh)
