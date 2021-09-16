@@ -43,7 +43,7 @@
 
 
 // 导入 threeJS
-import * as THREE from 'three/build/three.module'
+import * as THREE from '../node_modules/three/build/three.module.js'
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
@@ -53,7 +53,7 @@ console.log(camera)
 console.log(renderer)
 
 // 导入 dat gui
-import * as dat from 'dat.gui/build/dat.gui.module'
+import * as dat from '../node_modules/dat.gui/build/dat.gui.module.js'
 console.log(dat)
 
 // 导入 orbit control， orbit control 不在默认的 three.js 中
@@ -69,7 +69,7 @@ const raycaster = new THREE.Raycaster()
 console.log(raycaster)
 
 // 导入 gsap
-import gsap from 'gsap/src/gsap-core'
+import gsap from '../node_modules/gsap/src/gsap-core.js'
 console.log(gsap)
 
 // / 继承 GUI 
